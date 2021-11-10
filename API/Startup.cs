@@ -1,16 +1,16 @@
-using DataAccess.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Services;
 using System;
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Services;
+using DataAccess.Repository;
 
 namespace API
 {
@@ -21,8 +21,12 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddDbContext<ItemContext>(options => options.UseSqlServer(@"Server=DESKTOP-OSPL9NT;Database=ItemsDB;Trusted_Connection=True;"));
+
+            services.AddDbContext<DataAccess.DataContext.ItemContext>(options => options.UseSqlServer(@"Server=DESKTOP-OSPL9NT;Database=ItemsDB;Trusted_Connection=True;"));
+
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemService, ItemService>();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 

@@ -1,7 +1,4 @@
-﻿
-using API.Models;
-using AutoMapper;
-using DataAccess.Entities;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using System;
@@ -11,51 +8,80 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Controller]
     [Route("api/items")]
+    [Controller]
     public class ItemController : Controller
     {
-        private readonly IItemRepository _itemRepository;
-        private readonly IMapper _mapper;
-        public ItemController(IItemRepository itemRepository, IMapper mapper)
+        private IItemService _itemService;
+        private IMapper _mapper;
+
+        public ItemController(IItemService itemService, IMapper mapper)
         {
-            _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
+            _itemService = itemService ?? throw new ArgumentNullException(nameof(itemService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
         public IActionResult GetItems()
         {
-            return Ok(_mapper.Map<IEnumerable<ItemInfo>>(_itemRepository.GetItems()));
+            try
+            {
+                var items = _mapper.Map<IEnumerable<ViewModels.Item>>(_itemService.GetItems());
+                return Ok(items);
+            }
+            catch(Exception e)
+            {
+                return Json(new { status = "error", message = "error creating customer" + e.Message });
+            }
         }
-
-        [HttpGet("{id}",Name = "GetItem")]
+        [HttpGet("{id}", Name = "GetItem")]
         public IActionResult GetItem(int id)
         {
             try
             {
-                return Ok(_mapper.Map<ItemInfo>(_itemRepository.GetItem(id)));
+                var item = _mapper.Map<ViewModels.Item>(_itemService.GetItem(id));
+                return Ok(item);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                return Json(new { status = "error", message = "error creating customer" + e.Message });
             }
         }
 
         [HttpPost]
-        public IActionResult CreateItem([FromBody]ItemToCreate item)
+        public IActionResult CreateItem([FromBody] ViewModels.ItemToCreate item)
         {
-            var itemToAdd = _mapper.Map<Item>(item);
+            try
+            {
+                var itemToAddInService = _mapper.Map<Services.Models.ItemToCreate>(item);
 
-            _itemRepository.AddItem(itemToAdd);
+                var itemToReturn =_mapper.Map<ViewModels.Item>(_itemService.AddItem(itemToAddInService));
 
-            var itemToReturn = _mapper.Map<ItemInfo>(itemToAdd);
+                return CreatedAtRoute(
+                    "GetItem",
+                    new { itemToReturn.Id },
+                    itemToReturn);
+            }
+            catch(Exception e)
+            {
+                return Json(new { status = "error", message = "error creating customer" + e.Message });
+            }
+        }
 
-            return CreatedAtRoute(
-                "GetItem",
-                new { itemToReturn.Id },
-                itemToReturn);
+        [HttpDelete("{id}")]
+        public IActionResult DeleteItem(int id)
+        {
+            try
+            {
+                _itemService.DeleteItem(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+
+                return Json(new { status = "error", message = "error creating customer" + e.Message });
+            }
         }
     }
 }

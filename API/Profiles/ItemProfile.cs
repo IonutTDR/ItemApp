@@ -1,6 +1,4 @@
-﻿using API.Models;
-using AutoMapper;
-using DataAccess.Entities;
+﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +10,9 @@ namespace API.Profiles
     {
         public ItemProfile()
         {
-            CreateMap<Item, ItemInfo>().ReverseMap();
-            CreateMap<ItemToCreate, Item>();
+            CreateMap<Services.Models.Item, ViewModels.Item>();
+            CreateMap<ViewModels.ItemToCreate, Services.Models.ItemToCreate>();
+            CreateMap<Services.Models.ItemToCreate, ViewModels.Item>();  
         }
     }
 }

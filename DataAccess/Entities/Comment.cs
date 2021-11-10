@@ -12,10 +12,9 @@ namespace DataAccess.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
-        [MaxLength(50)]
-        public string Description { get; set; }
+        [MaxLength(200)]
+        public string Text { get; set; }
+
         [ForeignKey("Item")]
         public int ItemId { get; set; }
         public Item Item { get; set; }
