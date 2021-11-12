@@ -37,13 +37,13 @@ namespace Services
             return _mapper.Map<IEnumerable<Models.Item>>(_itemRepository.GetItems());
         }
 
-        public void UpdateItem(Item item)
+        public void UpdateItem(int id, ItemToUpdate item)
         {
-            if (!_itemRepository.ItemExists(item.Id))
-                throw new Exception($"The item with id {item.Id} does not exist!");
+            if (!_itemRepository.ItemExists(id))
+                throw new Exception($"The item with id {id} does not exist!");
             var itemToUpdate = _mapper.Map<DataAccess.Entities.Item>(item);
 
-            _itemRepository.UpdateItem(itemToUpdate);
+            _itemRepository.UpdateItem(id, itemToUpdate);
         }
 
         public void DeleteItem(int id)
@@ -82,14 +82,14 @@ namespace Services
             return _mapper.Map<Models.Comment>(_itemRepository.GetCommentForItem(itemId, id));
         }
 
-        public void UpdateComment(int itemId, CommentToUpdate comment)
+        public void UpdateComment(int itemId, int id, CommentToUpdate comment)
         {
             if (!_itemRepository.ItemExists(itemId))
                 throw new Exception($"The item with id {itemId} does not exist!");
-            if (!_itemRepository.CommentExists(comment.Id))
-                throw new Exception($"The comment with id {comment.Id} does not exist!");
+            if (!_itemRepository.CommentExists(id))
+                throw new Exception($"The comment with id {id} does not exist!");
             var commentToUpdate = _mapper.Map<DataAccess.Entities.Comment>(comment);
-            _itemRepository.UpdateComment(itemId, commentToUpdate);
+            _itemRepository.UpdateComment(itemId, id, commentToUpdate);
         }
 
         public void DeleteComment(int itemId, int id)

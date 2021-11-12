@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace API.ViewModels
 {
     public class CommentToUpdate
     {
-        public int Id { get; set; }
+        [Required(ErrorMessage = "You should provide a text value")]
         public string Text { get; set; }
     }
 }

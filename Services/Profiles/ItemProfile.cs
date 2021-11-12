@@ -11,6 +11,7 @@ namespace Services.Profiles
         {
             CreateMap<DataAccess.Entities.Item, Models.Item>().ReverseMap();
             CreateMap<Models.ItemToCreate, DataAccess.Entities.Item>();
+            CreateMap<Models.ItemToUpdate, DataAccess.Entities.Item>();
         }
     }
 }

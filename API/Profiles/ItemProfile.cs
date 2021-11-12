@@ -12,7 +12,8 @@ namespace API.Profiles
         {
             CreateMap<Services.Models.Item, ViewModels.Item>();
             CreateMap<ViewModels.ItemToCreate, Services.Models.ItemToCreate>();
-            CreateMap<Services.Models.ItemToCreate, ViewModels.Item>();  
+            CreateMap<Services.Models.ItemToCreate, ViewModels.Item>();
+            CreateMap<ViewModels.ItemToUpdate, Services.Models.ItemToUpdate>();
         }
     }
 }

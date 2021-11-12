@@ -31,7 +31,21 @@ namespace API.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { status = "error", message = "error creating comment" + e.ToString() });
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
+            }
+        }
+        [HttpGet("{id}", Name = "GetComment")]
+        public IActionResult GetComment(int itemId, int id)
+        {
+            try
+            {
+                var comment = _mapper.Map<ViewModels.Comment>(_itemService.GetCommentForItem(itemId, id));
+                return Ok(comment);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
         }
         [HttpPost]
@@ -44,12 +58,46 @@ namespace API.Controllers
 
                 var commentToReturn = _mapper.Map<ViewModels.Comment>(_itemService.AddComment(itemId, commentToCreate));
 
-                return Ok(commentToReturn);
+                return CreatedAtRoute(
+                    "GetComment",
+                    new { itemId, commentToReturn.Id },
+                    commentToReturn);
             }
             catch (Exception e)
             {
 
-                return Json(new { status = "error", message = "error creating comment" + e.ToString()});
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
+            }
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateComment(int itemId, int id, [FromBody]ViewModels.CommentToUpdate comment)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+            try
+            {
+                var commentToUpdate = _mapper.Map<Services.Models.CommentToUpdate>(comment);
+                _itemService.UpdateComment(itemId, id, commentToUpdate);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
+            }
+
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteComment(int itemId, int id)
+        {
+            try
+            {
+                _itemService.DeleteComment(itemId, id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
         }
     }

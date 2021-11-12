@@ -67,19 +67,18 @@ namespace DataAccess.Repository
             return _ctx.Items.Any(i => i.Id == id);
         }
 
-        public void UpdateComment(int itemid, Comment comment)
+        public void UpdateComment(int itemid, int id, Comment comment)
         {
-            var commentToUpdate = GetCommentForItem(itemid, comment.Id);
+            var commentToUpdate = GetCommentForItem(itemid, id);
 
             commentToUpdate.Text = comment.Text;
             
-
             _ctx.SaveChanges();
         }
 
-        public void UpdateItem(Item item)
+        public void UpdateItem(int id, Item item)
         {
-            var itemToUpdate = GetItem(item.Id);
+            var itemToUpdate = GetItem(id);
 
             itemToUpdate.Title = item.Title;
             itemToUpdate.Description = item.Description;

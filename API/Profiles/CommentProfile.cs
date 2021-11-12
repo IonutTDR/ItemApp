@@ -13,6 +13,7 @@ namespace API.Profiles
             CreateMap<Services.Models.Comment, ViewModels.Comment>();
             CreateMap<ViewModels.CommentToCreate, Services.Models.CommentToCreate>();
             CreateMap<Services.Models.CommentToCreate, ViewModels.Comment>();
+            CreateMap<ViewModels.CommentToUpdate, Services.Models.CommentToUpdate>();
         }
     }
 }

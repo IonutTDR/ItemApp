@@ -31,7 +31,7 @@ namespace API.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { status = "error", message = "error creating customer" + e.Message });
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
         }
         [HttpGet("{id}", Name = "GetItem")]
@@ -45,15 +45,19 @@ namespace API.Controllers
             catch (Exception e)
             {
 
-                return Json(new { status = "error", message = "error creating customer" + e.Message });
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
         }
 
         [HttpPost]
         public IActionResult CreateItem([FromBody] ViewModels.ItemToCreate item)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             try
             {
+                
                 var itemToAddInService = _mapper.Map<Services.Models.ItemToCreate>(item);
 
                 var itemToReturn =_mapper.Map<ViewModels.Item>(_itemService.AddItem(itemToAddInService));
@@ -65,8 +69,29 @@ namespace API.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { status = "error", message = "error creating customer" + e.Message });
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateItem(int id, [FromBody] ViewModels.ItemToUpdate item)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            try
+            {
+                var itemToUpdate = _mapper.Map<Services.Models.ItemToUpdate>(item);
+                _itemService.UpdateItem(id, itemToUpdate);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
+            }
+
         }
 
         [HttpDelete("{id}")]
@@ -80,7 +105,7 @@ namespace API.Controllers
             catch (Exception e)
             {
 
-                return Json(new { status = "error", message = "error creating customer" + e.Message });
+                return BadRequest(Json(new { status = "Error", message = e.Message }));
             }
         }
     }

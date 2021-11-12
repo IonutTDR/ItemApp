@@ -13,6 +13,5 @@ namespace API.ViewModels
         public string Description { get; set; }
         public DataAccess.Entities.State State { get; set; }
         public int NumberOfComments { get; set; }
-        public IEnumerable<ViewModels.Comment> Comments { get; set; }
     }
 }
